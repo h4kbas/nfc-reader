@@ -48,3 +48,33 @@ NFC.GetCardUID();
 //Available Readers 
 NFC.GetReadersList(); //public List<string> GetReadersList()
 ```
+
+## Example Inserted and Ejected Event Usage
+```csharp
+public void Card_Inserted()
+{
+  try
+  {
+    if (NFC.Connect())
+    {
+        //Do stuff like NFC.GetCardUID(); ...
+    }
+    else
+    {
+        //Give error message about connection...
+    }
+  }
+  catch (Exception ex)
+  {
+    this.SetStatusText("Hata: Bir Sorun Oluştu Tekrar Deneyiniz",false);
+  }
+}
+```
+
+```csharp
+public void Card_Ejected()
+{
+   //Do stuff...
+   NFC.Disconnect();
+}
+```

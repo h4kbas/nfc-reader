@@ -35,7 +35,7 @@ dotnet add package NFCReader
 ### Source Code
 
 ```bash
-git clone https://github.com/yourusername/nfc-reader.git
+git clone https://github.com/h4kbas/nfc-reader.git
 cd nfc-reader
 dotnet restore
 dotnet build

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        dotnet-version: ['6.0.x', '8.0.x']
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    
+    - name: Setup PC/SC (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pcscd libpcsclite-dev
+    
+    - name: Setup PC/SC (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install pcsc-lite
+        brew services start pcsc-lite
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --configuration Release
+    
+    - name: Build Examples
+      run: dotnet build Examples/Examples.csproj --no-restore --configuration Release
+    
+    - name: Pack
+      run: dotnet pack NFCReader.csproj --no-build --configuration Release --output ./nupkg
+
+  test-coverage:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Setup PC/SC
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pcscd libpcsclite-dev
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Test with coverage
+      run: |
+        dotnet test Tests/NFCReader.Tests.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/**/coverage.cobertura.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Security scan
+      run: |
+        dotnet list package --vulnerable
+        dotnet list package --deprecated

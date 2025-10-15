@@ -335,7 +335,7 @@ var uid = await reader.GetCardUIDAsync();
 ## Support
 
 For issues and questions:
-- Check the [Issues](https://github.com/yourusername/nfc-reader/issues) page
+- Check the [Issues](https://github.com/h4kbas/nfc-reader/issues) page
 - Review the examples and tests
 - Ensure your system meets the requirements
 

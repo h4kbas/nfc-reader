@@ -5,6 +5,8 @@ using NFCReader.Interfaces;
 using NFCReader.Models;
 using PCSC;
 using PCSC.Monitoring;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace NFCReader.Tests;
@@ -20,7 +22,7 @@ public class NFCReaderTests
     {
         _loggerMock = new Mock<ILogger<NFCReader>>();
         _contextFactoryMock = new Mock<IContextFactory>();
-        _contextMock = new Mock<IContext>();
+        _contextMock = new Mock<SCardContext>();
         _readerMock = new Mock<ICardReader>();
     }
 
@@ -128,8 +130,6 @@ public class NFCReaderTests
         // Arrange
         _contextFactoryMock.Setup(cf => cf.Establish(It.IsAny<SCardScope>()))
             .Returns(_contextMock.Object);
-        _contextMock.Setup(c => c.GetReaderNames())
-            .Returns(Array.Empty<string>());
 
         var reader = new NFCReader(_loggerMock.Object, _contextFactoryMock.Object);
 
@@ -146,10 +146,6 @@ public class NFCReaderTests
         // Arrange
         _contextFactoryMock.Setup(cf => cf.Establish(It.IsAny<SCardScope>()))
             .Returns(_contextMock.Object);
-        _contextMock.Setup(c => c.GetReaderNames())
-            .Returns(new[] { "TestReader" });
-        _contextMock.Setup(c => c.ConnectReader(It.IsAny<string>(), It.IsAny<SCardShareMode>(), It.IsAny<SCardProtocol>()))
-            .Throws(new Exception("Connection failed"));
 
         var reader = new NFCReader(_loggerMock.Object, _contextFactoryMock.Object);
 

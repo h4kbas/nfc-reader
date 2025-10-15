@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NFCReader.Models;
+using System;
 using Xunit;
 
 namespace NFCReader.Tests.Models;

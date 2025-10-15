@@ -44,7 +44,7 @@ public class APDUCommand
     {
         var dataLength = Data?.Length ?? 0;
         var hasLe = Le.HasValue;
-        var totalLength = 4 + dataLength + (hasLe ? 1 : 0);
+        var totalLength = 4 + (dataLength > 0 ? 1 : 0) + dataLength + (hasLe ? 1 : 0);
 
         var result = new byte[totalLength];
         result[0] = CLA;
@@ -52,15 +52,19 @@ public class APDUCommand
         result[2] = P1;
         result[3] = P2;
 
+        var currentIndex = 4;
+
         if (dataLength > 0)
         {
-            result[4] = (byte)dataLength;
-            Array.Copy(Data!, 0, result, 5, dataLength);
+            result[currentIndex] = (byte)dataLength;
+            currentIndex++;
+            Array.Copy(Data!, 0, result, currentIndex, dataLength);
+            currentIndex += dataLength;
         }
 
         if (hasLe)
         {
-            result[4 + dataLength] = Le.Value;
+            result[currentIndex] = Le.Value;
         }
 
         return result;

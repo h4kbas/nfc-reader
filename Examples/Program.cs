@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NFCReader;
+using NFCReader.Interfaces;
 using NFCReader.Models;
 using NFCReader.Utils;
 
@@ -23,7 +25,7 @@ public class Program
             builder.SetMinimumLevel(LogLevel.Information);
         });
 
-        var logger = loggerFactory.CreateLogger<Program>();
+        var logger = loggerFactory.CreateLogger<NFCReader>();
 
         try
         {

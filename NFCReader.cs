@@ -154,7 +154,7 @@ public class NFCReader : INFCReader
                 try
                 {
                     var state = _context.GetReaderStatus(readerName);
-                    var isAvailable = state.CurrentState.HasFlag(SCardState.Present);
+                    var isAvailable = state.CurrentState.HasFlag(SCRState.Present);
                     
                     readers.Add(new NFCReaderInfo
                     {

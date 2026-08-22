@@ -106,15 +106,24 @@ public class APDUCommand
         Data = data
     };
 
+    public static APDUCommand LoadAuthenticationKey(byte[] key, byte keyStructure = 0x00) => new()
+    {
+        CLA = 0xFF,
+        INS = 0x82,
+        P1 = 0x00,
+        P2 = keyStructure,
+        Data = key
+    };
+
     /// <summary>
     /// Creates an AUTHENTICATE BLOCK command
     /// </summary>
-    public static APDUCommand AuthenticateBlock(byte blockNumber, byte keyType = 0x61) => new()
+    public static APDUCommand AuthenticateBlock(byte blockNumber, byte keyType = 0x60, byte keySlot = 0x00) => new()
     {
         CLA = 0xFF,
         INS = 0x86,
         P1 = 0x00,
         P2 = 0x00,
-        Data = new byte[] { 0x01, 0x00, blockNumber, keyType, 0x01 }
+        Data = new byte[] { 0x01, 0x00, blockNumber, keyType, keySlot }
     };
 }

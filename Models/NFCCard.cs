@@ -48,7 +48,20 @@ public class NFCCard
     /// <summary>
     /// Gets a formatted string representation of the card UID
     /// </summary>
-    public string FormattedUID => UID != null ? string.Join(":", UID.Chunk(2).Select(chunk => new string(chunk))) : string.Empty;
+    public string FormattedUID
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(UID))
+                return string.Empty;
+
+            var hex = UID.Replace(" ", "").Replace(":", "").Replace("-", "");
+            if (hex.Length % 2 != 0)
+                return UID;
+
+            return string.Join(":", Enumerable.Range(0, hex.Length / 2).Select(i => hex.Substring(i * 2, 2)));
+        }
+    }
 
     /// <summary>
     /// Gets a formatted string representation of the ATR

@@ -84,7 +84,7 @@ public interface INFCReader : IDisposable
     /// <summary>
     /// Authenticates a block on the card
     /// </summary>
-    Task<bool> AuthenticateBlockAsync(byte blockNumber, byte keyType = 0x61, CancellationToken cancellationToken = default);
+    Task<bool> AuthenticateBlockAsync(byte blockNumber, byte keyType = 0x60, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Starts monitoring for card insertion/removal

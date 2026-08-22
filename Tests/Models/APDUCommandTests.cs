@@ -172,7 +172,7 @@ public class APDUCommandTests
         command.INS.Should().Be(0x86);
         command.P1.Should().Be(0x00);
         command.P2.Should().Be(0x00);
-        command.Data.Should().BeEquivalentTo(new byte[] { 0x01, 0x00, 0x04, 0x61, 0x01 });
+        command.Data.Should().BeEquivalentTo(new byte[] { 0x01, 0x00, 0x04, 0x61, 0x00 });
         command.Le.Should().BeNull();
     }
 }
